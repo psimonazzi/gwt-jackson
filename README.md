@@ -9,6 +9,17 @@ Jackson 1.x annotations (`org.codehaus.jackson.*`) are not supported.
 
 Check the [wiki](https://github.com/nmorel/gwt-jackson/wiki) for more informations.
 
+Release process at Europace
+---------------------------
+
+The lib gets no updates anymore. So we update it for ourselves with new versions of Jackson locally:
+
+1. Checkout the branch `local-releases`
+2. Update the property `jackson.version` to the needed version of Jackson (also update the version of all poms accordingly)
+3. Execute `mvn clean install` and if successful, execute `mvn release:prepare`
+4. Push changes to Github
+5. Execute `mvn release:perform` to deploy release to Nexus
+
 Quick start
 -------------
 Add `<inherits name="com.github.nmorel.gwtjackson.GwtJackson" />` to your module descriptor XML file.
