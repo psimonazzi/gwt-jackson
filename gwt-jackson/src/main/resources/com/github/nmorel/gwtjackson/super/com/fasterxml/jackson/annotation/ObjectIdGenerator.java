@@ -29,7 +29,7 @@ public abstract class ObjectIdGenerator<T>
      * scope; determination is based by passing a configured
      * "blueprint" (prototype) instance; from which the actual
      * instances are created (using {@link #newForSerialization}).
-     *
+     * 
      * @return True if this instance can be used as-is; false if not
      */
     public abstract boolean canUseFor(ObjectIdGenerator<?> gen);
@@ -54,31 +54,31 @@ public abstract class ObjectIdGenerator<T>
 
     /**
      * Accessor that may be called (after verifying (via {@link #maySerializeAsObject()})
-     * whether given name
-     *
+     * whether given name 
+     * 
      * @param name Name of property to check
      * @param parser Parser that points to property name, in case generator needs
      *    further verification (note: untyped, because <code>JsonParser</code> is defined
      *    in `jackson-core`, and this package does not depend on it).
-     *
+     * 
      * @since 2.5
      */
     public boolean isValidReferencePropertyName(String name, Object parser) {
         return false;
     }
-
+    
     /*
     /**********************************************************
     /* Factory methods
     /**********************************************************
      */
-
+    
     /**
      * Factory method to create a blueprint instance for specified
      * scope. Generators that do not use scope may return 'this'.
      */
     public abstract ObjectIdGenerator<T> forScope(Class<?> scope);
-
+    
     /**
      * Factory method called to create a new instance to use for
      * serialization: needed since generators may have state
@@ -88,7 +88,7 @@ public abstract class ObjectIdGenerator<T>
      * <code>com.fasterxml.jackson.databind.SerializerProvider</code>,
      * but can not be declared here as type itself (as well as call
      * to this object) comes from databind package.
-     *
+     * 
      * @param context Serialization context object used (of type
      *    <code>com.fasterxml.jackson.databind.SerializerProvider</code>;
      *    may be needed by more complex generators to access contextual
@@ -100,19 +100,19 @@ public abstract class ObjectIdGenerator<T>
      * Method for constructing key to use for ObjectId-to-POJO maps.
      */
     public abstract IdKey key(Object key);
-
+    
     /*
     /**********************************************************
     /* Methods for serialization
     /**********************************************************
      */
-
+    
     /**
      * Method used for generating a new Object Identifier to serialize
      * for given POJO.
-     *
+     * 
      * @param forPojo POJO for which identifier is needed
-     *
+     * 
      * @return Object Identifier to use.
      */
     public abstract T generateId(Object forPojo);
@@ -149,7 +149,7 @@ public abstract class ObjectIdGenerator<T>
         public final Object key;
 
         private final int hashCode;
-
+        
         public IdKey(Class<?> type, Class<?> scope, Object key) {
             if (key == null) {
                 throw new IllegalArgumentException("Can not construct IdKey for null key");
@@ -157,7 +157,7 @@ public abstract class ObjectIdGenerator<T>
             this.type = type;
             this.scope = scope;
             this.key = key;
-
+            
             int h = key.hashCode() + type.getName().hashCode();
             if (scope != null) {
                 h ^= scope.getName().hashCode();
@@ -181,8 +181,8 @@ public abstract class ObjectIdGenerator<T>
         @Override
         public String toString() {
             return "[ObjectId: key=" + key
-                    + ", type=" + ((type == null) ? "NONE" : type.getName())
-                    + ", scope=" + ((scope == null) ? "NONE" : scope.getName()) + "]";
+                        + ", type=" + ((type == null) ? "NONE" : type.getName())
+                        + ", scope=" + ((scope == null) ? "NONE" : scope.getName()) + "]";
         }
     }
 }

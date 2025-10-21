@@ -1,3 +1,29 @@
+Copyright 2013 Nicolas Morel
+
+Copyright 2025 Murata ID Solutions.
+
+This software has been modified for compatibility with newer versions of jackson-annotations, 
+with gratitude to Nicolas Morel for the original development and to Europace for the fork.
+
+Changes are:
+
+- Use Gradle as build system
+- Upgrade dependencies: GWT, Jackson Annotations, Javapoet
+- Upgrade jackson-annotations version and GWT source overrides in `src/main/resources/com/github/nmorel/gwtjackson/super/com/fasterxml/jackson/annotation`
+
+To keep in sync with future versions of jackson-annotations:
+
+- Upgrade the jackson-annotations version in `build.gradle.kts`
+- If some classes are not compatible with GWT, either exclude them in
+  `src/main/resources/com/fasterxml/jackson/annotation/JacksonAnnotation.gwt.xml`
+  (if not needed) or copy them in
+  `src/main/resources/com/github/nmorel/gwtjackson/super/com/fasterxml/jackson/annotation`
+  and modify them to make them compatible
+- Build with `gradlew build`
+  - This will build the main `gwt-jackson` module. Examples, extensions and unit tests unfortunately are not supported by this fork at the moment.
+
+Original README below:
+
 gwt-jackson [![Build Status](https://travis-ci.org/nmorel/gwt-jackson.svg?branch=master)](https://travis-ci.org/nmorel/gwt-jackson)
 =====
 gwt-jackson is a JSON parser for [GWT](http://www.gwtproject.org/). It uses [Jackson 2.x annotations](https://github.com/FasterXML/jackson-annotations) to customize the serialization/deserialization process.
@@ -8,17 +34,6 @@ You can also find a lot of use cases in the [tests](gwt-jackson/src/test/java/co
 Jackson 1.x annotations (`org.codehaus.jackson.*`) are not supported.
 
 Check the [wiki](https://github.com/nmorel/gwt-jackson/wiki) for more informations.
-
-Release process at Europace
----------------------------
-
-The lib gets no updates anymore. So we update it for ourselves with new versions of Jackson locally:
-
-1. Checkout the branch `local-releases`
-2. Update the property `jackson.version` to the needed version of Jackson (also update the version of all poms accordingly)
-3. Execute `mvn clean install` and if successful, execute `mvn release:prepare`
-4. Push changes to Github
-5. Execute `mvn release:perform` to deploy release to Nexus
 
 Quick start
 -------------
@@ -136,9 +151,9 @@ You can also get maven snapshots using the following repository :
 Without Maven
 -------------
 In addition of gwt-jackson jar you can find [here](https://github.com/nmorel/gwt-jackson/releases), you also need
-- [jackson-annotations-2.7.2.jar](http://search.maven.org/remotecontent?filepath=com/fasterxml/jackson/core/jackson-annotations/2.7.2/jackson-annotations-2.7.2.jar)
-- [jackson-annotations-2.7.2-sources.jar](http://search.maven.org/remotecontent?filepath=com/fasterxml/jackson/core/jackson-annotations/2.7.2/jackson-annotations-2.7.2-sources.jar) for the GWT compilation only
-- [javapoet-1.0.0.jar](http://search.maven.org/remotecontent?filepath=com/squareup/javapoet/1.0.0/javapoet-1.0.0.jar) for the GWT compilation only
+- com.fasterxml.jackson.core:jackson-annotations
+- com.fasterxml.jackson.core:jackson-annotations sources
+- com.squareup:javapoet 1.x for the GWT compilation only
 
 Server communication
 -------------

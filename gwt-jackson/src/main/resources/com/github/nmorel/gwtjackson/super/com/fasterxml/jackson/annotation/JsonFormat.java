@@ -50,7 +50,7 @@ import java.lang.annotation.Target;
  * @since 2.0
  */
 @Target({ElementType.ANNOTATION_TYPE, ElementType.FIELD, ElementType.METHOD, ElementType.PARAMETER,
-    ElementType.TYPE})
+        ElementType.TYPE})
 @Retention(RetentionPolicy.RUNTIME)
 @JacksonAnnotation
 public @interface JsonFormat

@@ -7,8 +7,7 @@ import java.lang.annotation.Target;
 import java.util.*;
 
 /**
- * Super source for {@link com.fasterxml.jackson.annotation.JsonIgnoreProperties} to remove the use of
- * {@link java.lang.String#format(String, Object...)}
+ * Super source for {@link com.fasterxml.jackson.annotation.JsonIgnoreProperties} to remove the use of java.lang.reflect.* classes
  *
  * Annotation that can be used to either suppress serialization of
  * properties (during serialization), or ignore processing of
@@ -50,6 +49,9 @@ public @interface JsonIgnoreProperties
      * exception.
      *<p>
      * Does not have any effect on serialization.
+     *
+     * @return True if any and all unknown properties are to be ignored without
+     *   exceptions (or other special handling); false otherwise.
      */
     public boolean ignoreUnknown() default false;
 
@@ -64,6 +66,9 @@ public @interface JsonIgnoreProperties
      *<p>
      * Default value is `false`, which means that getters with matching names
      * will be ignored.
+     * 
+     * @return True if getters should be allowed (i.e. NOT ignored); false if getters
+     *    are to be ignored
      *
      * @since 2.6
      */
@@ -80,14 +85,18 @@ public @interface JsonIgnoreProperties
      *<p>
      * Default value is `false`, which means that setters with matching names
      * will be ignored.
+     * 
      *
+     * @return True if setters should be allowed (i.e. NOT ignored); false if setters
+     *    are to be ignored
      * @since 2.6
      */
     public boolean allowSetters() default false;
 
     /*
     /**********************************************************
-    /* Value class used to enclose information
+    /* Value class used to enclose information, allow for
+    /* merging of layered configuration settings.
     /**********************************************************
      */
 
@@ -138,8 +147,8 @@ public @interface JsonIgnoreProperties
         }
 
         public static Value from(JsonIgnoreProperties src) {
-            if (src == null) { // should this return EMPTY?
-                return null;
+            if (src == null) {
+                return EMPTY; // since 2.9
             }
             return construct(_asSet(src.value()),
                     src.ignoreUnknown(), src.allowGetters(), src.allowSetters(),
@@ -152,16 +161,13 @@ public @interface JsonIgnoreProperties
         /**
          * Factory method that may be used (although is NOT the recommended way)
          * to construct an instance from a full set of properties. Most users would
-         * be better of starting by {@link #empty()} instance and using `withXxx`/`withoutXxx`)
+         * be better of starting by {@link #empty()} instance and using `withXxx()`/`withoutXxx()`
          * methods, as this factory method may need to be changed if new properties
          * are added in {@link JsonIgnoreProperties} annotation.
          */
         public static Value construct(Set<String> ignored, boolean ignoreUnknown,
                 boolean allowGetters, boolean allowSetters,
                 boolean merge) {
-            if (_empty(ignored, ignoreUnknown, allowGetters, allowSetters, merge)) {
-                return EMPTY;
-            }
             if (_empty(ignored, ignoreUnknown, allowGetters, allowSetters, merge)) {
                 return EMPTY;
             }
@@ -232,7 +238,7 @@ public @interface JsonIgnoreProperties
             return state ? EMPTY.withIgnoreUnknown()
                     : EMPTY.withoutIgnoreUnknown();
         }
-
+        
         /**
          * Mutant factory method that merges values of this value with given override
          * values, so that any explicitly defined inclusion in overrides has precedence over
@@ -269,11 +275,11 @@ public @interface JsonIgnoreProperties
         public Value withIgnored(String... ignored) {
             return construct(_asSet(ignored), _ignoreUnknown, _allowGetters, _allowSetters, _merge);
         }
-
+        
         public Value withoutIgnored() {
             return construct(null, _ignoreUnknown, _allowGetters, _allowSetters, _merge);
         }
-
+        
         public Value withIgnoreUnknown() {
             return _ignoreUnknown ? this :
                 construct(_ignored, true, _allowGetters, _allowSetters, _merge);
@@ -300,7 +306,7 @@ public @interface JsonIgnoreProperties
             return !_allowSetters ? this :
                 construct(_ignored, _ignoreUnknown, _allowGetters, false, _merge);
         }
-
+        
         public Value withMerge() {
             return _merge ? this :
                 construct(_ignored, _ignoreUnknown, _allowGetters, _allowSetters, true);
@@ -310,7 +316,7 @@ public @interface JsonIgnoreProperties
             return !_merge ? this :
                 construct(_ignored, _ignoreUnknown, _allowGetters, _allowSetters, false);
         }
-
+        
         @Override
         public Class<JsonIgnoreProperties> valueFor() {
             return JsonIgnoreProperties.class;
@@ -355,7 +361,7 @@ public @interface JsonIgnoreProperties
             }
             return _ignored;
         }
-
+        
         public boolean getIgnoreUnknown() {
             return _ignoreUnknown;
         }
@@ -374,13 +380,13 @@ public @interface JsonIgnoreProperties
 
         @Override
         public String toString() {
-            return "["
+            return "JsonIgnoreProperties.Value("
                     + "ignored=" + _ignored
                     + ",ignoreUnknown=" + _ignoreUnknown
                     + ",allowGetters=" + _allowGetters
                     + ",allowSetters=" + _allowSetters
                     + ",merge=" + _merge
-                    + "]";
+                    + ")";
         }
 
         @Override
