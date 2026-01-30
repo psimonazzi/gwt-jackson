@@ -3,10 +3,10 @@ plugins {
     id("maven-publish")
 }
 
-version = "2.20.0"
+version = "2.21.0"
 
 val gwtVersion = "2.12.2"
-val jacksonAnnotationVersion = "2.20"
+val jacksonAnnotationVersion = "2.21"
 val javapoetVersion = "1.13.0"
 
 dependencies {
@@ -22,7 +22,7 @@ dependencies {
     compileOnly("com.squareup:javapoet:$javapoetVersion")
 
     //testImplementation("junit:junit:4.13.2")
-    //testImplementation("com.fasterxml.jackson.core:jackson-databind:2.20.0")
+    //testImplementation("com.fasterxml.jackson.core:jackson-databind:2.21.0")
 }
 
 java {
@@ -34,7 +34,7 @@ tasks.withType<JavaCompile>().configureEach {
     options.release = 17
 }
 tasks.withType<Wrapper> {
-    gradleVersion = "9.1.0"
+    gradleVersion = "9.2.0"
 }
 tasks.withType<JavaCompile>().configureEach {
     options.apply {
